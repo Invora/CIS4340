@@ -7,10 +7,12 @@ public class R02_XP00_J{
     public static void main(String[] args) {
 
     }
+    //Noncompliant Code Example (File Deletion)
     public void deleteFile(){
+
         File someFile = new File("someFileName.txt");
-        if (!someFile.delete()){
-            // Handle failure to delete the file
-        }
+        // Do something with someFile
+        someFile.delete();
+
     }
 }
