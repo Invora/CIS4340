@@ -1,8 +1,7 @@
 import java.io.File;
 /*
 Rule 02. Expressions (EXP)
-XP00-J. Do not ignore values returned by methods Given the non-compliant code
-below:
+XP00-J. Do not ignore values returned by methods
 */
 public class R02_XP00_J{
     public static void main(String[] args) {
