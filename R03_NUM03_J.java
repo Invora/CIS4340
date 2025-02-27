@@ -11,7 +11,8 @@ public class R03_NUM03_J {
 
     }
 
+    //Compliant Solution
     public static long getInteger(DataInputStream is) throws IOException {
-        return is.readInt() & 0xFFFFFFFL; //Mask with 32 one-bits
+        return is.readInt() & 0xFFFFFFFFL; // Mask with 32 one-bits
     }
 }

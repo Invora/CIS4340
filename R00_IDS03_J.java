@@ -1,7 +1,10 @@
+import java.util.regex.Pattern;
+
 /* Rule 00. Input Validation and Data Sanitization (IDS) */
 /* DS03-J. Do not log unsanitized user input */
 public class R00_IDS03_J{
 
+    //Compliant Solution (Sanitized User)
     public static void main(String[] args) {
 
         if (loginSuccessful) {
@@ -9,10 +12,10 @@ public class R00_IDS03_J{
         } else {
             logger.severe("User login failed for: " + sanitizeUser(username));
         }
-
     }
-public static String sanitizeUser(String username) {
+
+    public String sanitizeUser(String username) {
         return Pattern.matches("[A-Za-z0-9_]+", username)
-        ? username : "unauthorized user";
+            ? username : "unauthorized user";
     }
 }

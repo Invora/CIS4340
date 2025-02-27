@@ -7,9 +7,12 @@ public class R02_XP00_J{
     public static void main(String[] args) {
 
     }
+    //Compliant Solution (File Deletion)
     public void deleteFile(){
+
         File someFile = new File("someFileName.txt");
-        if (!someFile.delete()){
+        // Do something with someFile
+        if (!someFile.delete()) {
             // Handle failure to delete the file
         }
     }

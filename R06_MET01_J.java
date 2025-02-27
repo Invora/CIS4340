@@ -4,8 +4,10 @@ MET01-J. Never use assertions to validate method arguments
 */
 
 public class R06_MET01_J {
-    public static void main(String[] args) {
 
+    //Compliant Solution
+    public static void main(String[] args) {
+        getAbsAdd(Integer.MIN_VALUE, 1);
     }
 
     public static int getAbsAdd(int x, int y) {
@@ -19,5 +21,4 @@ public class R06_MET01_J {
         }
         return absX + absY;
     }
-
 }
