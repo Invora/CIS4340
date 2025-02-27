@@ -5,12 +5,8 @@ DCL01-J. Do not reuse public identifiers from the Java Standard Library
 
 public class R01_DCL01_J {
 
-    public static void main(String[] args) {
-
-    }
-
-    //Noncompliant Example (Class Name)
-     class Vector {
+    //Compliant Solution (Class Name)
+     class MyVector {
         private int val = 1;
 
         public boolean isEmpty() {
@@ -26,7 +22,7 @@ public class R01_DCL01_J {
     // import java.util.Vector; omitted
     public class VectorUser {
         public static void main(String[] args) {
-            Vector v = new Vector();
+            MyVector v = new MyVector();
             if (v.isEmpty()) {
                 System.out.println("Vector is empty");
             }

@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class R14_SER02_J {
 
-    //Noncompliant Code Example (Seal Then Sign)
+    //Compliant Solution (Sign Then Seal)
     class SerializableMap<K,V> implements Serializable {
         final static long serialVersionUID = -2648720192864531932L;
         private Map<K,V> map;
@@ -47,10 +47,17 @@ public class R14_SER02_J {
         }
 
         public static void main(String[] args)
-                throws IOException, GeneralSecurityException,
+                throws
+                IOException, GeneralSecurityException,
                 ClassNotFoundException {
             // Build map
             SerializableMap<String, Integer> map = buildMap();
+
+            // Generate signing public/private key pair & sign map
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
+            KeyPair kp = kpg.generateKeyPair();
+            Signature sig = Signature.getInstance("SHA1withDSA");
+            SignedObject signedMap = new SignedObject(map, kp.getPrivate(), sig);
 
             // Generate sealing key & seal map
             KeyGenerator generator;
@@ -59,37 +66,30 @@ public class R14_SER02_J {
             Key key = generator.generateKey();
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, key);
-            SealedObject sealedMap = new SealedObject(map, cipher);
-
-            // Generate signing public/private key pair & sign map
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
-            KeyPair kp = kpg.generateKeyPair();
-            Signature sig = Signature.getInstance("SHA1withDSA");
-            SignedObject signedMap =
-                    new SignedObject(sealedMap, kp.getPrivate(), sig);
+            SealedObject sealedMap = new SealedObject(signedMap, cipher);
 
             // Serialize map
             ObjectOutputStream out =
                     new ObjectOutputStream(new FileOutputStream("data"));
-            out.writeObject(signedMap);
+            out.writeObject(sealedMap);
             out.close();
 
             // Deserialize map
             ObjectInputStream in =
                     new ObjectInputStream(new FileInputStream("data"));
-            signedMap = (SignedObject) in.readObject();
+            sealedMap = (SealedObject) in.readObject();
             in.close();
+
+            // Unseal map
+            cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            signedMap = (SignedObject) sealedMap.getObject(cipher);
 
             // Verify signature and retrieve map
             if (!signedMap.verify(kp.getPublic(), sig)) {
                 throw new GeneralSecurityException("Map failed verification");
             }
-            sealedMap = (SealedObject) signedMap.getObject();
-
-            // Unseal map
-            cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            map = (SerializableMap<String, Integer>) sealedMap.getObject(cipher);
+            map = (SerializableMap<String, Integer>) signedMap.getObject();
 
             // Inspect map
             InspectMap(map);
